@@ -1,4 +1,4 @@
-#include <geometry_msgs/TransformStamped.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <rosbag/bag.h>
 #include <rosbag/view.h>
 
@@ -120,7 +120,7 @@ bool Loader::loadTformFromROSBag(const std::string& bag_path, Odom* odom) {
   }
 
   std::vector<std::string> types;
-  types.push_back(std::string("geometry_msgs/TransformStamped"));
+  types.push_back(std::string("geometry_msgs/PoseWithCovarianceStamped"));
   rosbag::View view(bag, rosbag::TypeQuery(types));
 
   size_t tform_num = 0;
@@ -128,19 +128,19 @@ bool Loader::loadTformFromROSBag(const std::string& bag_path, Odom* odom) {
     std::cout << " Loading transform: \e[1m" << tform_num++
               << "\e[0m from ros bag" << '\r' << std::flush;
 
-    geometry_msgs::TransformStamped transform_msg =
-        *(m.instantiate<geometry_msgs::TransformStamped>());
+    geometry_msgs::PoseWithCovarianceStamped transform_msg =
+        *(m.instantiate<geometry_msgs::PoseWithCovarianceStamped>());
 
     Timestamp stamp = transform_msg.header.stamp.sec * 1000000ll +
                       transform_msg.header.stamp.nsec / 1000ll;
 
-    Transform T(Transform::Translation(transform_msg.transform.translation.x,
-                                       transform_msg.transform.translation.y,
-                                       transform_msg.transform.translation.z),
-                Transform::Rotation(transform_msg.transform.rotation.w,
-                                    transform_msg.transform.rotation.x,
-                                    transform_msg.transform.rotation.y,
-                                    transform_msg.transform.rotation.z));
+    Transform T(Transform::Translation(transform_msg.pose.pose.position.x,
+                                       transform_msg.pose.pose.position.y,
+                                       transform_msg.pose.pose.position.z),
+                Transform::Rotation(transform_msg.pose.pose.orientation.w,
+                                    transform_msg.pose.pose.orientation.x,
+                                    transform_msg.pose.pose.orientation.y,
+                                    transform_msg.pose.pose.orientation.z));
     odom->addTransformData(stamp, T);
   }
 
