@@ -230,6 +230,7 @@ void Aligner::lidarOdomTransform(Lidar* lidar, Odom* odom) {
   opt_data.odom = odom;
   opt_data.aligner = this;
   opt_data.time_cal = config_.time_cal;
+  std::stringstream ss;
 
   size_t num_params = 6;
   if (config_.time_cal) {
@@ -254,6 +255,7 @@ void Aligner::lidarOdomTransform(Lidar* lidar, Odom* odom) {
 
   } else {
     x = config_.inital_guess;
+    ROS_INFO("Assigning initial guess...                                ");
   }
 
   ROS_INFO("Performing Local Optimization...                                ");
