@@ -1,4 +1,4 @@
 # Ignore results files
-.txt
+*.txt
 # Ignore pointcloud files
-.ply
+*.ply
